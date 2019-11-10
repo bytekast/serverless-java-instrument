@@ -10,6 +10,31 @@ START RequestId: 024cecab-ba19-40c7-acae-2d2f4695edbe Version: $LATEST
 2019-11-10 20:35:08 <024cecab-ba19-40c7-acae-2d2f4695edbe> INFO  com.serverless.Handler:31 - received: {}
 {
   "threadId" : 1,
+  "jvm" : {
+    "vmName" : "OpenJDK 64-Bit Server VM",
+    "availableProcessors" : 2,
+    "heapMemory" : {
+      "committed" : 20316160,
+      "init" : 20971520,
+      "max" : 883884032,
+      "used" : 9277952
+    },
+    "nonHeapMemory" : {
+      "committed" : 16187392,
+      "init" : 2555904,
+      "max" : 260046848,
+      "used" : 10566024
+    },
+    "threadCount" : 4,
+    "vmVendor" : "Oracle Corporation",
+    "uptime" : "7106ms",
+    "threadSserTime" : 660000000,
+    "systemLoadAverage" : 0.07,
+    "vmVersion" : "25.201-b09",
+    "daemonThreadCount" : 3,
+    "peakThreadCount" : 4,
+    "threadCpuTime" : 750872982
+  },
   "context" : {
     "awsRequestId" : "024cecab-ba19-40c7-acae-2d2f4695edbe",
     "functionName" : "jtest-dev-hello",
