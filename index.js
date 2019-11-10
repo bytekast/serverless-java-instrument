@@ -35,6 +35,7 @@ class JavaInstrumentPlugin {
       this.serverless.service.package.artifact = instrumentedPackage // override
     } else {
       console.error(`Unable to instrument deployment artifact ${deploymentArtifact}`)
+      console.error(result.stderr)
     }
   }
 }
