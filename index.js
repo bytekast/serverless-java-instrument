@@ -1,51 +1,42 @@
 'use strict';
 
-class ServerlessPlugin {
+const {spawnSync} = require("child_process");
+
+class JavaInstrumentPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
 
-    this.commands = {
-      welcome: {
-        usage: 'Helps you start your first Serverless plugin',
-        lifecycleEvents: ['hello', 'world'],
-        options: {
-          message: {
-            usage:
-              'Specify the message you want to deploy ' +
-              '(e.g. "--message \'My Message\'" or "-m \'My Message\'")',
-            required: true,
-            shortcut: 'm',
-          },
-        },
-      },
-    };
+    this.instrumenter = `${__dirname}/lib/instrumenter.jar`
+    this.aspects = `${__dirname}/lib/aspects.jar`
+    this.runtime = `${__dirname}/lib/runtime.jar`
 
     this.hooks = {
-      'before:welcome:hello': this.beforeWelcome.bind(this),
-      'welcome:hello': this.welcomeUser.bind(this),
-      'welcome:world': this.displayHelloMessage.bind(this),
-      'after:welcome:world': this.afterHelloWorld.bind(this),
-    };
+      "after:package:createDeploymentArtifacts": this.instrument.bind(this),
+      "before:deploy:function:packageFunction": this.instrument.bind(this)
+    }
   }
 
-  beforeWelcome() {
-    this.serverless.cli.log('Hello from Serverless!');
-
-    this.serverless.cli.log(this.serverless);
-  }
-
-  welcomeUser() {
-    this.serverless.cli.log('Your message:');
-  }
-
-  displayHelloMessage() {
-    this.serverless.cli.log(`${this.options.message}`);
-  }
-
-  afterHelloWorld() {
-    this.serverless.cli.log('Please come again!');
+  instrument() {
+    const service = this.serverless.service;
+    if (service.provider.name != "aws") {
+      return;
+    }
+    const deploymentArtifact = this.serverless.service.package.artifact
+    this.serverless.cli.log(`Instrumenting deploy artifact ${deploymentArtifact}...`)
+    const result = spawnSync('java', ['-jar', this.instrumenter, deploymentArtifact, this.aspects, this.runtime], {
+      cwd: process.cwd(),
+      env: process.env,
+      stdio: 'pipe',
+      encoding: 'utf-8'
+    })
+    if (result.status == 0) {
+      const instrumentedPackage = result.stdout.trim()
+      this.serverless.service.package.artifact = instrumentedPackage // override
+    } else {
+      console.error(`Unable to instrument deployment artifact ${deploymentArtifact}`)
+    }
   }
 }
 
-module.exports = ServerlessPlugin;
+module.exports = JavaInstrumentPlugin;
