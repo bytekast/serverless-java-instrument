@@ -28,7 +28,7 @@ START RequestId: 024cecab-ba19-40c7-acae-2d2f4695edbe Version: $LATEST
     "threadCount" : 4,
     "vmVendor" : "Oracle Corporation",
     "uptime" : "7106ms",
-    "threadSserTime" : 660000000,
+    "threadUserTime" : 660000000,
     "systemLoadAverage" : 0.07,
     "vmVersion" : "25.201-b09",
     "daemonThreadCount" : 3,

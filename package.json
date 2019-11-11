@@ -1,6 +1,6 @@
 {
   "name": "serverless-java-instrument",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Serverless Framework Plugin that auto-instruments JVM-based Lambda functions",
   "main": "index.js",
   "directories": {
